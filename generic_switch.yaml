@@ -1,0 +1,84 @@
+# ===========================================
+# ESPHome Generic Switch
+# ===========================================
+# This configuration is for an ESP8266 device that:
+#  - Controls a physical switch using a binary sensor.
+#  - Provides an HTTP web server on port 80.
+#  - Exposes an API to Home Assistant.
+#  - Supports OTA for firmware updates.
+#
+# Adjust the substitutions below to tailor device names,
+# fallback hotspot credentials, and more. Then upload to your ESP8266.
+
+# -------------------------------------------------
+# Substitutions: variables that make the file easier
+# to customize by allowing changes in one place.
+# -------------------------------------------------
+substitutions:
+  device_name: "generic_switch"                        # The main name for the ESPHome device
+  fallback_ssid: "Generic-Switch Fallback Hotspot"     # SSID for fallback AP
+  fallback_password: "GenericPassword"                 # Password for fallback AP
+  ota_password: "2eac1321fd59a545457923343874127c"     # OTA password
+  wifi_ssid_var: !secret wifi_ssid                     # Primary Wi-Fi SSID
+  wifi_password_var: !secret wifi_password             # Primary Wi-Fi Password
+  switch_name: "Generic Switch"                        # Name for binary sensor
+
+esphome:
+  name: ${device_name}
+
+esp8266:
+  board: d1_mini
+
+# -------------------------------------------------
+# Logger: Enables logs from the device.
+# -------------------------------------------------
+logger:
+
+# -------------------------------------------------
+# Home Assistant API: Allows integration with HA.
+# -------------------------------------------------
+api:
+
+# -------------------------------------------------
+# Web Server: For debugging and local control.
+# -------------------------------------------------
+web_server:
+  port: 80
+
+# -------------------------------------------------
+# OTA: Over-The-Air updates with a password.
+# -------------------------------------------------
+ota:
+  - platform: esphome
+    password: "${ota_password}"
+
+# -------------------------------------------------
+# Wi-Fi Configuration: Connects the device to
+# your Wi-Fi network. Fallback hotspot included.
+# -------------------------------------------------
+wifi:
+  ssid: "${wifi_ssid_var}"
+  password: "${wifi_password_var}"
+  power_save_mode: none
+  reboot_timeout: 0s
+  ap:
+    ssid: "${fallback_ssid}"
+    password: "${fallback_password}"
+
+captive_portal:
+
+# -------------------------------------------------
+# Binary Sensor: A physical switch on GPIO2 (D4).
+# Logs when pressed/released.
+# -------------------------------------------------
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: D4
+      mode: INPUT_PULLUP
+      inverted: true
+    name: "${switch_name}"
+    on_press:
+      - logger.log: "Switch Pressed!"
+    on_release:
+      - logger.log: "Switch Released!"
