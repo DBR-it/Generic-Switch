@@ -23,9 +23,13 @@ packages:
 - You can still override **substitutions** by defining them **after** the `packages:` block in your local YAML. For example:
   ```yaml
   substitutions:
-    device_name: "my_custom_switch"
-    fallback_ssid: "My-Fallback-AP"
-    fallback_password: "AnotherPassword"
+  device_name: "generic_switch"                        # The main name for the ESPHome device
+  fallback_ssid: "Generic-Switch Fallback Hotspot"     # SSID for fallback AP
+  fallback_password: "GenericPassword"                 # Password for fallback AP
+  ota_password: "2eac1321fd59a545457923343874127c"     # OTA password
+  wifi_ssid_var: !secret wifi_ssid                     # Primary Wi-Fi SSID
+  wifi_password_var: !secret wifi_password             # Primary Wi-Fi Password
+  switch_name: "Generic Switch"                        # Name for binary sensor
   ```
 - Make sure you have a `secrets.yaml` if you’re referencing `!secret wifi_ssid` and `!secret wifi_password`.
 
@@ -37,4 +41,3 @@ packages:
 - Creates a **fallback hotspot** if Wi-Fi fails.
 
 That’s it! This approach keeps your local configs clean while pulling updates from the GitHub repo automatically.
-
