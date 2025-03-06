@@ -9,11 +9,10 @@ esphome:
   name: my_switch
 
 packages:
-  generic_switch:
+  remote_package_files:
     url: https://github.com/DBR-it/Generic-Switch
     ref: main
-    files:
-      - generic_switch.yaml
+    files: [generic_switch.yaml]
 ```
 
 1. **`my_switch`** is an example name for your device.
